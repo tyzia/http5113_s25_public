@@ -1,0 +1,210 @@
+
+
+
+Plan
+
+
+devtools
+Elements tab
+Console tab
+Network tab
+Sources tab
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CSS in devtools
+
+The Elements tab in Chrome DevTools lets you inspect,
+edit, and debug the DOM (Document Object Model) in real time.
+
+
+demo: css/css.html
+
+- how to inspect DOM
+
+Go from html to body and then to p
+
+Styles
+- how to interpret CSS styles
+- topmost css rule in the list - the one which is applied
+- crossed out css rule = overridden
+- uncheck one by one and show how color changes
+- uncheck everything and still color is black (default)
+
+- show Computed tab
+- show how to add styles in browser (color: purple, color: white)
+- show how to update existing css rule value
+- show how to add more styles to existing rule (font-size)
+
+Elements
+- show how to delete elements from DOM
+- show how to 'hide' elements in DOM ('h)
+- show how to add elements to DOM (Edit as HTML) (<strong>bold text</strong>)
+- show how to edit text of element
+
+Margins, padding, borders
+- show what is margin
+- show what is padding
+- show what is border
+
+
+Console in DevTools
+
+The Console lets you run JavaScript,
+debug errors, and interact with the page.
+
+
+$0
+
+When you inspect an element, it becomes $0 in the Console.
+
+$0.textContent = 'hello world'
+$0.style.backgroundColor = "lightblue";
+
+
+window
+
+The window object represents the browser’s global scope.
+
+Create our own properties in window object:
+
+window.myVar = "DevTools Rocks!";
+
+
+
+
+Network Tab
+
+The Network Tab in Chrome DevTools is a
+powerful tool for debugging web requests.
+It logs every network activity
+(HTML, CSS, JS, API calls, images, etc.)
+when a page loads or interacts with a server.
+
+
+Preserve Log
+Check this to keep logs after page reloads.
+
+Disable Cache
+Check this to ensure fresh requests (no cached responses).
+
+
+Each entry in the Network tab represents a
+request-response cycle.
+
+Headers
+Request & response metadata (URL, method, status, headers).
+
+Payload
+Data sent with the request (for POST/PUT).
+
+Response
+The data returned from the server (JSON, HTML, etc.).
+
+Timing
+How long each request phase took (DNS, SSL, waiting, download).
+
+
+Headers
+
+Request Headers (Sent by the Browser)
+These are sent to the server when making a request.
+
+Example:
+
+Host: api.example.com
+The domain being requested.
+
+User-Agent: Mozilla/5.0.
+Identifies the browser/device.
+
+Accept: application/json
+What data formats our browser can handle.
+
+Authorization: Bearer token123
+Used for authentication.
+
+Content-Type: application/json
+Specifies request body format (for POST/PUT).
+
+
+
+Response Headers (Sent by the Server)
+These come back from the server with the response.
+
+Example:
+
+Content-Type: text/html
+Tells the browser how to interpret the response.
+
+Cache-Control: max-age=3600
+Caching rules for the browser.
+
+Set-Cookie: sessionid=abc123
+Sets cookies in the browser.
+
+Status: 200 OK
+HTTP status code (success/error).
+
+
+404 error
+
+demo/demo.html (change path to styles.css)
+
+demo: medium.com
+
+
+
+
+Sources Tab
+
+The Sources tab in Chrome DevTools allows you to:
+
+- View all loaded files (HTML, CSS, JS)
+- Debug JavaScript (breakpoints, stepping through code)
+- Modify files permanently using Overrides
+
+
+Overrides let you save changes to files
+directly from DevTools without editing source files.
+
+Why Use Overrides?
+
+- Test CSS/JS changes without modifying original files
+- Debug issues by tweaking code live
+- Persist changes across page refreshes
+
+How to Enable Overrides
+
+- Open DevTools → Sources tab
+- Click Overrides (if hidden, click >> to find it)
+- Select an empty folder (Chrome will save changes here)
+- Click Allow when prompted for permissions
+
+
+
+
+
+demo: overrides/overrides.html
+
+
+
+
+
+
+Thank you
