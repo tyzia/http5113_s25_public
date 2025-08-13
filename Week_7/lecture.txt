@@ -1,0 +1,599 @@
+
+
+
+
+
+
+Plan
+
+Docker
+npm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Docker
+
+Docker is a tool that helps you
+run applications in isolated environments.
+
+These env called containers.
+
+A container is like a virtual machine
+that includes everything your app needs:
+
+- Code
+- Libraries
+- Dependencies
+
+Containers can run across different machines
+and different OS.
+
+
+Install
+
+Download from:
+https://www.docker.com
+
+Agree to Recommended settings.
+
+
+
+
+What problem Docker solves?
+
+Example
+
+demo/app.js
+
+I need to run this as Node.js app.
+
+This app may not run for many reasons, like:
+
+- You don't have Node.js installed
+- Your port 3000 is busy or not available
+- Different behavior on Windows vs. Mac/Linux
+
+Let's mimic that I don't have Node.js installed:
+
+> alias node="echo 'command not found'"
+
+Now I try to run Node app:
+
+> node demo/app.js
+command not found
+
+Now, let's see how app actually runs:
+
+First, remove alias:
+
+> unalias node
+
+Run app
+> node demo/app.js
+
+Open in browser:
+http://localhost:3000/
+
+"Hello from Node.js!"
+
+This means that our Node.js app is running.
+
+
+
+
+Let's fix it with Docker.
+
+1) Create Docker file with settings
+2) Build Docker image
+3) Run Docker container
+
+
+
+
+Step 1:  Create Docker file
+
+
+Dockerfile
+
+FROM node:18-alpine
+WORKDIR /app
+COPY app.js .
+CMD ["node", "app.js"]
+
+
+Here:
+
+FROM node:18-alpine
+
+Starts with a pre-built Linux image
+that has Node.js v18 pre-installed.
+
+You get a clean, isolated environment with
+Node.js ready to run your code.
+
+
+WORKDIR /app
+
+Sets working directory inside of Docker container
+as /app. All files will be copied here.
+
+
+COPY app.js .
+
+Copies app.js file from your computer into
+the Docker container’s root directory.
+
+
+CMD ["node", "app.js"]
+
+Tells Docker to run node app.js when
+the container starts.
+
+Same as > node app.js
+
+
+
+
+Step 2: Build Docker image
+
+
+
+> cd week_7/docker_demo/
+> docker build -t node_app .
+
+Here:
+
+-t node-app = "t"ags your image as "node-app"
+. = current directory with Dockerfile is build context
+
+Result:
+
+Building 14.7s (8/8) FINISHED                                                                                docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                             0.2s
+ ...
+ => => extracting sha256:25ff2da83641908f65c3a74d80409d6b1b62ccfaab220b9ea70b80df5a2e0549                                        0.0s
+ => [internal] load build context                                                                                                0.1s
+ => => transferring context: 229B                                                                                                0.0s
+ => [2/3] WORKDIR /app                                                                                                           0.7s
+ => [3/3] COPY app.js .                                                                                                          0.1s
+ => exporting to image                                                                                                           0.1s
+ => => exporting layers                                                                                                          0.1s
+ => => writing image sha256:74ced53d235f81645daacef5435d92682cd072cff5dde015a6d2ecf212231a54                                     0.0s
+ => => naming to docker.io/library/node_app
+
+This command created a Docker image and saved
+it in internal Docker memory, not in
+my project.
+
+To see the list of images:
+
+> docker images
+
+
+
+
+
+Step 3: Run Docker container
+
+
+
+> docker run -p 3000:3000 node_app
+
+Open in browser:
+http://localhost:3000/
+
+"Hello from Node.js!"
+
+This means that our Node.js app is running.
+
+
+Stop Docker container
+
+I need container ID (not image name).
+
+> docker stop node_app
+DOES NOT work
+
+To see container ID:
+
+> docker ps
+
+CONTAINER ID   IMAGE
+fa74bfe04c31   node_app
+
+Now stop it:
+
+> docker stop fa74b
+
+Verify that it is stopped:
+
+> docker ps
+
+
+
+
+Clean-up steps:
+
+
+
+Remove Docker container
+
+Even after stopping Docker container
+we still need to remove it
+to free up memory.
+
+To see existing container:
+
+> docker ps -a
+
+-a = "all" containers (running and stopped)
+
+To delete container:
+
+> docker rm fa74b
+
+Verify:
+
+> docker ps -a
+
+
+Remove Docker image
+
+See all images:
+
+> docker images
+
+Remove image:
+
+> docker rmi node_app
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+npm
+
+
+
+npm stands for Node Package Manager.
+
+npm helps to download and manage packages/libraries.
+
+Benefits of npm:
+
+- npm helps avoid reinventing the wheel
+(use existing tools).
+
+- npm manages dependencies so you
+don’t have to manually download scripts.
+
+- npm is used in frameworks like Angular, React, Express.
+
+
+Problems
+
+npm solves 3 big problems:
+
+1) Dependency nightmare
+No manual tracking of nested dependencies.
+
+2) Version Conflicts
+Ensures all packages use compatible versions.
+
+3) Reproducibility
+package-lock.json locks exact versions so
+your app works the same everywhere.
+
+
+
+
+
+
+Dependency nightmare
+
+
+
+
+
+Example
+
+I have this app which uses packages:
+
+my_app@1.0
+└── package_A@1.2
+    ├── package_B@2.0
+    │   └── package_C@1.5
+    └── package_D@3.1
+        └── package_C@1.5
+
+I have two packages depending on package_C:
+
+- package_B
+- package_D
+
+There is a new version of package_C - v1.6.
+
+How to manually update it?
+
+1. Check package_B's v2.0 docs for v1.6 compatibility
+2. Check package_D's v3.1 docs for v1.6 compatibility
+3. Manually download package_C@1.6
+4. Test everything works together
+
+With npm:
+
+> npm update package_C
+
+Automatically:
+
+1. Checks version ranges in package_B/D
+2. Only updates if all dependencies are satisfied
+3. Updates package-lock.json for consistency
+
+
+
+
+Version Conflicts
+
+
+
+
+Example
+
+my_app@1.0
+└── package_A@1.2
+    ├── package_B@2.0
+    │   └── package_C@1.5
+    └── package_D@3.1
+        └── package_C@2.0
+
+Here is a version conflict:
+
+- package_B v2.0 requires package_C v1.5
+- package_D v3.1 requires package_C v2.0
+
+Let's assume you manually downloaded both
+versions of package_C:
+
+my_app/
+├── package_A/
+├── package_B/
+├── package_C@1.5/  ← For package_B
+└── package_C@2.0/  ← For package_D
+
+Node.js can only load one version of package_C.
+
+Depending on how you require it:
+
+- If package_B loads first → It gets package_C@1.5.
+- If package_D loads first → It gets package_C@2.0.
+
+Let's assume package_D loads first and gets package_C@2.0.
+
+When you run your app, you get error:
+
+Error: package_B@2.0 requires package_C@1.5 but found 2.0
+
+
+How to resolve this issue manually?
+
+There is no easy way to fix it.
+
+Options:
+
+- Rename package C folders and use these in the app.
+
+* Breaks module caching
+* Doesn't scale (impossible for deep dependencies)
+
+- Create symbolic links and rename package C folders
+
+* Manual labor (must repeat for every dependency level)
+* Breaks if paths change
+* No version validation
+
+- Form and modify package (last resort)
+
+* Maintenance nightmare (now you own the forks)
+* Security risks (no automatic updates)
+
+With npm:
+
+> npm install
+
+This will prioritise stability of the project,
+so it:
+
+- Detects the conflict.
+- Checks if newer versions of package_B or
+package_D exist that resolve it.
+
+Suggests:
+
+> npm install package_B@3.0
+
+
+
+
+
+Reproducibility
+
+
+
+
+Reproducibility means that every time you
+(or someone else) installs and runs your project,
+it behaves exactly the same way.
+
+Example
+
+- you manually download package_A@1.0
+- package_A@1.0 depends on library_B v2+
+- you manually download library@2.1.0.
+- the app works
+- tomorrow your teammate downloads library@2.2.0
+- the app might break for teammate if v2.2.0 is not compatible
+
+This leads to "Works on My Machine" syndrome:
+
+Your manual setup might work, but another
+developer’s copy fails because they got
+slightly different files.
+
+
+How npm solves the issue:
+
+> npm install package_A
+
+This will do two things:
+
+1) Install the package A and all its dependencies
+2) Create an exact image of what was installed
+(package-log.json)
+
+Locks the exact version in package-lock.json:
+
+{
+  "package_A": {
+    "version": "2.1.0",  ← Exact version!
+    "dependencies": { ... }  ← Even sub-dependencies are locked.
+  }
+}
+
+Next time I run npm install, npm will use package-lock.json
+and install all from there.
+
+Same for any other developer on the project.
+
+
+For the reasons above npm is used
+in almost every modern web project.
+
+
+
+
+Install
+
+
+Download:
+https://nodejs.org
+
+Verify installation:
+
+> node -v
+> npm -v
+
+You install Node and npm comes as a bundle.
+
+
+
+Initialize
+
+
+> npm init -y
+
+This creates package.json file
+with this content:
+
+{
+ "name": "1",
+ "version": "1.0.0",
+ "main": "script.js",
+ "scripts": {},
+ "keywords": [],
+ "author": "",
+ "license": "ISC",
+ "description": ""
+}
+
+package.json - the heart of npm project.
+
+It contains metadata about the project:
+
+- Project name, version, description, and author.
+- Dependencies: External libraries your project needs to run.
+- DevDependencies: Packages required only during development.
+- Scripts: Custom commands you can run.
+
+To install dependencies or packages in your project:
+
+> npm i typescript --save-dev
+
+It should be a dev dependency, because it is necessary
+only in development stage.
+
+This command will create:
+
+- package-lock.json file
+- node_modules/ folder
+
+> tsc -v
+DOES NOT work
+This targets global installation of TypeScript,
+which I don't have.
+
+If I want to use TS in local project
+I need npx:
+
+> npx tsc -v
+
+
+What is npx?
+
+npx allows to run binaries locally (from node_modules).
+
+node_modules - is a folder where all dependencies of my
+project are installed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Thank you
